@@ -1,0 +1,37 @@
+{
+  "name": "gas-notify-gh-labeled-issues",
+  "version": "0.0.0",
+  "private": true,
+  "description": "GAS Script for the nofity labeled GitHub issues",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 0",
+    "clean:dist": "rm -rf dist",
+    "prebuild": "npm run clean:dist",
+    "build": "webpack && cp src/appsscript.json dist/appsscript.json",
+    "push": "clasp push -f",
+    "open": "clasp open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sugarshin/gas-notify-gh-labeled-issues.git"
+  },
+  "keywords": [
+    "gas"
+  ],
+  "author": "sugarshin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sugarshin/gas-notify-gh-labeled-issues/issues"
+  },
+  "homepage": "https://github.com/sugarshin/gas-notify-gh-labeled-issues#readme",
+  "devDependencies": {
+    "@google/clasp": "2.1.0",
+    "@types/google-apps-script": "0.0.44",
+    "@types/node": "10.14.4",
+    "gas-webpack-plugin": "1.0.2",
+    "ts-loader": "5.3.3",
+    "typescript": "3.4.3",
+    "webpack": "4.29.6",
+    "webpack-cli": "3.3.0"
+  }
+}

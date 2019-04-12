@@ -1,0 +1,81 @@
+version: 2.1
+
+references:
+  workspace_root: &workspace_root
+    ~/repo
+
+executors:
+  nodejs:
+    working_directory: *workspace_root
+    docker:
+      - image: circleci/node:10.15.3
+
+commands:
+  restore_npm_deps:
+    steps:
+      - restore_cache:
+          name: Restore Cache - .npm
+          keys:
+            - npm-deps-{{ checksum "package-lock.json" }}
+            - npm-deps-
+  save_npm_deps:
+    steps:
+      - save_cache:
+          name: Save Cache - .npm
+          paths:
+            - ~/.npm
+          key: npm-deps-{{ checksum "package-lock.json" }}
+
+jobs:
+  test:
+    executor:
+      name: nodejs
+    steps:
+      - checkout
+      - restore_npm_deps
+      - run: npm ci
+      - save_npm_deps
+      - run: npm test
+  build:
+    executor:
+      name: nodejs
+    steps:
+      - checkout
+      - restore_npm_deps
+      - run: npm ci
+      - save_npm_deps
+      - run: npm run build
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - ./build
+      - store_artifacts:
+          path: build
+          destination: build
+  push:
+    executor:
+      name: nodejs
+    steps:
+      - checkout
+      - restore_npm_deps
+      - run: npm ci
+      - save_npm_deps
+      - attach_workspace:
+          at: *workspace_root
+      - run: |
+          echo $CLASPRC_BASE64 | base64 --decode > ~/.clasprc.json
+          echo $CLASP_BASE64 | base64 --decode > .clasp.json
+      - run: npm run push
+
+workflows:
+  test_build_push:
+    jobs:
+      - test
+      - build
+      - push:
+          requires:
+            - test
+            - build
+          filters:
+            branches:
+              only: master
