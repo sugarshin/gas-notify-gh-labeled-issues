@@ -3,7 +3,7 @@ const webpack = require('webpack')
 const GasPlugin = require('gas-webpack-plugin')
 
 module.exports = {
-  mode: 'production',
+  mode: 'development',
   entry: path.join(__dirname, 'src/index.ts'),
   devtool: false,
   output: {
