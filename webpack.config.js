@@ -1,4 +1,5 @@
 const path = require('path')
+const webpack = require('webpack')
 const GasPlugin = require('gas-webpack-plugin')
 
 module.exports = {
